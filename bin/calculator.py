@@ -3,34 +3,51 @@ import math
 
 class Calculator:
     def __init__(self):
-        pass
+        self.name = "test"
+        self.number_pressed = None
+
+    def insert_number(self, number):
+        self.number_pressed = int(number)
+        print(self.number_pressed)
 
     def add(self):
-        pass
+        print("add")
 
     def subtract(self):
-        pass
+        print("subtract")
 
     def divide(self):
-        pass
+        print("divide")
 
     def multiply(self):
-        pass
+        print("multiply")
 
     def find_square_root(self):
-        pass
+        print("find_square_root")
 
     def find_square(self):
-        pass
+        print("find_square")
 
     def find_percentage(self):
-        pass
+        print("find_percentage")
 
     def find_reciprocal(self):
-        pass
+        print("find_reciprocal")
 
     def clear(self):
-        pass
+        print("clear")
 
     def clear_entry(self):
-        pass
+        print("clear_entry")
+
+    def delete(self):
+        print("delete")
+
+    def calculate(self):
+        print("calculate")
+
+    def point(self):
+        print("point")
+
+    def flip_sign(self):
+        print("flip sign")
