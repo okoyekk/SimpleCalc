@@ -5,17 +5,16 @@ from bin import calculator
 
 class Controller:
     def __init__(self):
-        self.root = tk.Tk()
-        self.root.resizable(False, False)
-        self.calculator = calculator.Calculator()
+        self.window = tk.Tk()
+        self.calculator = calculator.Calculator(self)
         # self.button_labels is a dictionary mapping each button name to its position:tuple
         # All position tuples are in the form of (column, row)
-        self.button_labels = {"%": (1, 1), "CE": (2, 1), "C": (3, 1), "del": (4, 1),
-                              "1/x": (1, 2), "SQR": (2, 2), "SQRT": (3, 2), "/": (4, 2),
-                              "7": (1, 3), "8": (2, 3), "9": (3, 3), "*": (4, 3),
-                              "4": (1, 4), "5": (2, 4), "6": (3, 4), "-": (4, 4),
-                              "1": (1, 5), "2": (2, 5), "3": (3, 5), "+": (4, 5),
-                              "+/-": (1, 6), "0": (2, 6), ".": (3, 6), "=": (4, 6)}
+        self.button_labels = {"%": (0, 1), "CE": (1, 1), "C": (2, 1), "del": (3, 1),
+                              "1/x": (0, 2), "SQR": (1, 2), "SQRT": (2, 2), "/": (3, 2),
+                              "7": (0, 3), "8": (1, 3), "9": (2, 3), "*": (3, 3),
+                              "4": (0, 4), "5": (1, 4), "6": (2, 4), "-": (3, 4),
+                              "1": (0, 5), "2": (1, 5), "3": (2, 5), "+": (3, 5),
+                              "+/-": (0, 6), "0": (1, 6), ".": (2, 6), "=": (3, 6)}
         # self.button_functions is a dictionary mapping each button name to a function of the Calculator class
         self.button_functions = {"%": self.calculator.find_percentage, "CE": self.calculator.clear_entry,
                                  "C": self.calculator.clear, "del": self.calculator.delete,
@@ -29,19 +28,24 @@ class Controller:
                                  "3": self.calculator.insert_number, "+": self.calculator.add,
                                  "+/-": self.calculator.flip_sign, "0": self.calculator.insert_number,
                                  ".": self.calculator.point, "=": self.calculator.calculate}
-        self.input_bar = None
 
+        self.input_bar = None
+        self.input = tk.StringVar()
+        self.input_text = ""
+        self.input.set(self.input_text)
+
+        self.root = ttk.Frame(self.window, relief=tk.RIDGE)
+        self.root.pack()
         self.create_window()
-        self.root.mainloop()
+        self.window.mainloop()
 
     def create_window(self):
-        self.root.winfo_toplevel().title("SimpleCalc")
-        input_frame = self.create_frame((1, 1))
-        number_frame = self.create_frame((1, 2))
-        # Create input_bar
-        input_bar = ttk.Entry(input_frame)
-        input_bar.grid(row=0, column=0)
-        self.create_buttons(number_frame)
+        # self.window.resizable(False, False)
+        self.window.winfo_toplevel().title("SimpleCalc")
+        # update input_bar
+        self.input_bar = ttk.Label(self.root, textvariable=self.input, anchor="e", width=32)
+        self.input_bar.grid(row=0, column=0, columnspan=4, sticky=(tk.N, tk.E, tk.W))
+        self.create_buttons(self.root)
 
     # noinspection PyArgumentList
     def create_buttons(self, parent):
@@ -53,8 +57,9 @@ class Controller:
                                      height=3, width=8)
             else:
                 button_1 = tk.Button(parent, text=label, command=self.button_functions[label], height=3, width=8)
-            button_1.grid(row=position[1], column=position[0], padx=(1, 1), pady=(1, 1))
+            button_1.grid(row=position[1], column=position[0])
 
-    def create_frame(self, position: tuple):
-        new_frame = ttk.Frame(self.root, relief=tk.RIDGE).grid(row=position[1], column=position[0])
-        return new_frame
+    def test_print(self, word):
+        print("test -- ", word)
+        self.input_text += str(word)
+        self.input.set(self.input_text)

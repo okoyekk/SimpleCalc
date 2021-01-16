@@ -1,14 +1,14 @@
 import math
 
-
 class Calculator:
-    def __init__(self):
+    def __init__(self, window_object):
         self.name = "test"
         self.number_pressed = None
+        self.controller = window_object
 
     def insert_number(self, number):
         self.number_pressed = int(number)
-        print(self.number_pressed)
+        self.controller.test_print(self.number_pressed)
 
     def add(self):
         print("add")
