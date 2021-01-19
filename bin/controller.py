@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
+from PIL import ImageTk, Image
 from bin import calculator
 
 
@@ -19,47 +20,64 @@ class Controller:
         self.button_functions = {"%": self.calculator.find_percentage, "CE": self.calculator.clear_entry,
                                  "C": self.calculator.clear, "del": self.calculator.delete,
                                  "1/x": self.calculator.find_reciprocal, "SQR": self.calculator.find_square,
-                                 "SQRT": self.calculator.find_square_root, "/": self.calculator.divide,
+                                 "SQRT": self.calculator.find_square_root, "/": self.calculator.insert_operation,
                                  "7": self.calculator.insert_number, "8": self.calculator.insert_number,
-                                 "9": self.calculator.insert_number, "*": self.calculator.multiply,
+                                 "9": self.calculator.insert_number, "*": self.calculator.insert_operation,
                                  "4": self.calculator.insert_number, "5": self.calculator.insert_number,
-                                 "6": self.calculator.insert_number, "-": self.calculator.subtract,
+                                 "6": self.calculator.insert_number, "-": self.calculator.insert_operation,
                                  "1": self.calculator.insert_number, "2": self.calculator.insert_number,
-                                 "3": self.calculator.insert_number, "+": self.calculator.add,
+                                 "3": self.calculator.insert_number, "+": self.calculator.insert_operation,
                                  "+/-": self.calculator.flip_sign, "0": self.calculator.insert_number,
                                  ".": self.calculator.point, "=": self.calculator.calculate}
-
+        # Initialized input variables for updating the input label
         self.input_bar = None
-        self.input = tk.StringVar()
         self.input_text = ""
+        self.input = tk.StringVar()
         self.input.set(self.input_text)
-
+        # Created a root frame, self.root to house all widgets
         self.root = ttk.Frame(self.window, relief=tk.RIDGE)
         self.root.pack()
         self.create_window()
-        self.window.mainloop()
 
     def create_window(self):
-        # self.window.resizable(False, False)
+        # convert logo.jpg to a tk PhotoImage
+        photo = ImageTk.PhotoImage(Image.open("assets/logo.jpg"))
+        # sets the windows icon to photo
+        self.window.iconphoto(False, photo)
+        # Turns off window resizing
+        self.window.resizable(False, False)
+        # Sets window title to "SimpleCalc"
         self.window.winfo_toplevel().title("SimpleCalc")
-        # update input_bar
-        self.input_bar = ttk.Label(self.root, textvariable=self.input, anchor="e", width=32)
+        # Creates, styles and positions the input bar
+        self.input_bar = ttk.Label(self.root, textvariable=self.input, anchor="e", width=32, font="Verdana 8 bold")
         self.input_bar.grid(row=0, column=0, columnspan=4, sticky=(tk.N, tk.E, tk.W))
+        # Creates all the buttons in the root frame
         self.create_buttons(self.root)
 
     # noinspection PyArgumentList
     def create_buttons(self, parent):
         for label, position in self.button_labels.items():
-            # Maps a different command to each button, if the button is a number, it passes the number to the
-            # calculator class function as an argument, else it makes a regular function button
+            # Maps a different command to each button, if the button is a number or an operation, it passes the
+            # number to the calculator class function as an argument, else it makes a regular function button
             if label.isnumeric():
+                button_1 = tk.Button(parent, text=label, command=lambda x=label: self.button_functions[x](x),
+                                     height=3, width=8)
+            elif label in "+-/*":
                 button_1 = tk.Button(parent, text=label, command=lambda x=label: self.button_functions[x](x),
                                      height=3, width=8)
             else:
                 button_1 = tk.Button(parent, text=label, command=self.button_functions[label], height=3, width=8)
+            # Positions each button using the value of each key in the self.button_labels dictionary
             button_1.grid(row=position[1], column=position[0])
 
-    def test_print(self, word):
-        print("test -- ", word)
-        self.input_text += str(word)
+    def update_input(self, key):
+        self.input_text += str(key)
         self.input.set(self.input_text)
+
+    def set_input(self, key):
+        self.input_text = str(key)
+        self.input.set(self.input_text)
+
+    @staticmethod
+    def throw_error(message):
+        messagebox.showerror(title="Error!", message=message)
