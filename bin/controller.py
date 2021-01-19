@@ -6,6 +6,11 @@ from bin import calculator
 
 class Controller:
     def __init__(self):
+        """
+        Description: Initializes the Controller class with instance variables and methods
+        parameters: self
+        returns: None
+        """
         self.window = tk.Tk()
         self.calculator = calculator.Calculator(self)
         # self.button_labels is a dictionary mapping each button name to its position:tuple
@@ -40,6 +45,11 @@ class Controller:
         self.create_window()
 
     def create_window(self):
+        """
+        Description: Sets up the program's window
+        parameters: self
+        returns: None
+        """
         # convert logo.jpg to a tk PhotoImage
         photo = ImageTk.PhotoImage(Image.open("assets/logo.jpg"))
         # sets the windows icon to photo
@@ -56,6 +66,12 @@ class Controller:
 
     # noinspection PyArgumentList
     def create_buttons(self, parent):
+        """
+        Description: Creates and positions all the buttons in the parent window based off self.button_labels dictionary
+                     and binds them to functions using the self.button_functions dictionary
+        parameters: self, parent(Tk frame object)
+        returns: None
+        """
         for label, position in self.button_labels.items():
             # Maps a different command to each button, if the button is a number or an operation, it passes the
             # number to the calculator class function as an argument, else it makes a regular function button
@@ -71,13 +87,29 @@ class Controller:
             button_1.grid(row=position[1], column=position[0])
 
     def update_input(self, key):
+        """
+        Description: Updates the self.input variable which changes the input label in the application window
+        parameters: self, key
+        returns: None
+        """
+        # concatenates key and the self.input_text variable
         self.input_text += str(key)
         self.input.set(self.input_text)
 
     def set_input(self, key):
+        """
+        Description: Sets the self.input variable to the key given
+        parameters: self, key
+        returns: None
+        """
         self.input_text = str(key)
         self.input.set(self.input_text)
 
     @staticmethod
     def throw_error(message):
+        """
+        Description: Shows a tkinter error messagebox with message when passed
+        parameters: message
+        returns: None
+        """
         messagebox.showerror(title="Error!", message=message)
