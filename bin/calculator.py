@@ -1,3 +1,4 @@
+import re
 class Calculator:
     def __init__(self, window_object):
         """
@@ -127,7 +128,37 @@ class Calculator:
         """
         # self.controller.throw_error(message="Cant divide by 0")
         try:
-            self.total = eval(self.controller.input_text.strip())
+            charIndex = 0;
+            numInRow = 0;
+            arrIndex = 0;
+            arr = []
+            temp = self.controller.input_text
+            print(temp)
+            for char in temp:
+                print(char)
+                print(arr)
+                if (char.isnumeric()):
+                    print(char + " Is numeric")
+                    if (numInRow == 0):
+                        arr.append(char)
+                        numInRow += 1
+                    elif (numInRow > 0): 
+                        numInRow += 1
+                        arr[arrIndex] = arr[arrIndex] + char
+                else:
+                    numInRow = 0
+                    arr[arrIndex] = arr[arrIndex]
+                    arr.append(char)
+                    arrIndex += 2
+
+                    
+                charIndex += 1
+            for index, value in enumerate(arr):
+                if (value.isnumeric()):
+                    arr[index] = value.lstrip('0')
+            
+            temp = "".join(arr)
+            self.total = eval(temp)
             self.controller.set_input(self.total)
         except ZeroDivisionError:
             self.controller.throw_error("Can't Divide By 0! please revise input")
